@@ -31,7 +31,8 @@
 |---|---|
 | `CMakeLists.txt` | Busca o JUCE e o WebView2, define o app, embute a UI e define os testes. |
 | `LICENSE` | Texto da AGPLv3. |
-| `README.md` | Build local, instruções do usuário piloto e checklist da Fase 0. |
+| `README.md` | Como colaborar, setup do Mac (humano + Claude), builds e checklist da Fase 0 (já existe). |
+| `CLAUDE.md` | Regras curtas que o Claude Code carrega sozinho em toda sessão (já existe). |
 | `src/AudioMath.h` | Funções puras sem JUCE: latência de ida e volta, índice compactado de canal. |
 | `src/Main.cpp` | App JUCE, janela, `MainComponent` (WebView + ponte + timer de meter + logger). |
 | `src/Devices.h/.cpp` | `listDevices()`: todos os devices de todos os drivers, com dados reais. |
@@ -1213,7 +1214,8 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 5: CI (macOS universal + Windows), release e README
 
 **Files:**
-- Create: `.github/workflows/build.yml`, `README.md`
+- Create: `.github/workflows/build.yml`
+- Modify: `README.md` (só se divergir do workflow)
 
 **Interfaces:**
 - Consumes: os comandos de build das Tasks 1–4. O artefato do app fica em `build/AudioBridge_artefacts/Release/`.
@@ -1302,41 +1304,7 @@ jobs:
         run: gh release create "$GITHUB_REF_NAME" AudioBridge-* --repo "$GITHUB_REPOSITORY" --prerelease --title "AudioBridge $GITHUB_REF_NAME" --notes "Build de teste. macOS 12+ (Intel e Apple Silicon) e Windows 10+."
 ```
 
-- [ ] **Step 2: `README.md`**
-
-````markdown
-# AudioBridge
-
-Mesa de monitoração ao vivo em software. Junta interfaces de áudio, monta um mix de fone por músico e (em breve) roda plugins VST3/AU por canal. A DAW continua gravando em paralelo.
-Design: `docs/superpowers/specs/2026-11-09-audiobridge-design.md`.
-
-Licença: AGPLv3. Usa o JUCE (AGPLv3/comercial); uma versão comercial de código fechado pode exigir licença comercial do JUCE.
-
-## Compilar (Windows)
-Pré-requisitos: CMake 3.22+, Visual Studio Build Tools (C++), Node 24.
-```powershell
-cd ui; npm ci; npm run build; cd ..
-cmake -B build
-cmake --build build --config Release
-ctest --test-dir build -C Release
-.\build\AudioBridge_artefacts\Release\AudioBridge.exe
-```
-
-## Testar no Mac (usuário piloto)
-1. Baixe `AudioBridge-macos-universal.tar.gz` na página **Releases** do GitHub e dê dois cliques para extrair.
-2. Arraste `AudioBridge.app` para Aplicativos e tente abrir. O macOS vai bloquear (app sem assinatura paga).
-3. Vá em **Ajustes do Sistema > Privacidade e Segurança**, role até "Segurança" e clique em **Abrir Mesmo Assim** (vale por ~1 h após a tentativa). Digite a senha.
-4. Quando pedir acesso ao **microfone**, permita: é como o app lê as entradas da placa.
-
-### Checklist da Fase 0
-- [ ] O app abre e mostra "AudioBridge v…".
-- [ ] A tabela "Dispositivos" lista as placas plugadas com o número certo de entradas e saídas.
-- [ ] Desplugar ou plugar uma placa atualiza a tabela sozinha.
-- [ ] Teste de passagem: entrada da placa → fone, com buffer 128. Ouve sem estalos por 5 minutos?
-- [ ] A latência mostrada parece com o que se ouve?
-- [ ] Teste com entrada de uma placa e saída de outra (ex.: UMC404 → 2i2). Funciona?
-- [ ] Clique em "Abrir log" e mande o arquivo `AudioBridge.log` + prints de cada item.
-````
+- [ ] **Step 2: Conferir o `README.md`.** Ele já existe, com as seções "Como colaborar", "Setup no Mac", builds, release e checklist. Ajuste-o só se os comandos de build ou os caminhos de artefato do workflow divergirem do que está escrito lá.
 
 - [ ] **Step 3: Gerar o lockfile da UI (se ainda não estiver versionado) e commitar**
 
