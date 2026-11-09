@@ -1,0 +1,8 @@
+# vídeos/mídia de referência (não versionar)
+*.mp4
+*.mov
+# build
+build/
+node_modules/
+ui/dist/
+.DS_Store
